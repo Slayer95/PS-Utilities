@@ -18,12 +18,14 @@ function toId (text) {
 	if (text && text.id) text = text.id;
 	else if (text && text.userid) text = text.userid;
 
-	return string(text).toLowerCase().replace(/[^a-z0-9]+/g, '');
+	return string(text).toLowerCase().trim().replace(/[^a-z0-9\ ]+/g, '');
 }
 
 function capitalizeFirst (text) {
 	if (!text.length) return '';
-	return text[0].toUpperCase() + text.slice(1);
+	return text.split(' ').map(function (word) {
+		return word[0].toUpperCase() + word.slice(1);
+	}).join(' ');
 }
 
 function splitComma (text) {
