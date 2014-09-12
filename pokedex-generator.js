@@ -144,11 +144,11 @@ validProperties = {
 	},
 	'egggroups': {
 		name: 'eggGroups',
-		validate: function (val) {return val.split(',').map(toName)}
+		validate: function (val) {return val.split('/').map(toName)}
 	},
 	'otherformes': {
 		name: 'otherFormes',
-		validate: function (val) {return val.split(',').map(toId)}
+		validate: function (val) {return val.split('/').map(toId)}
 	}
 };
 
