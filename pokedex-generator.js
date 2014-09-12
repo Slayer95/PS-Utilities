@@ -46,6 +46,14 @@ function parseAlias (alias) {
 	return Aliases[toId(alias)] || alias;
 }
 
+function toShowdownStyle (text) {
+	text = text.replace(/[\r\n]+/g, '\r\n'); // CRLF
+	text = text.replace(/\r\n\t\t\t/g, ' '); // don't indent so deep
+	text = text.replace(/\r\n\t\t\}/g, '}').replace(/\{\ /g, '{'); // fix what second replace broke
+	text = text.replace(/\r\n\t\t\]/g, ']').replace(/\[\ /g, '['); // fix what second replace broke
+	return text;
+}
+
 Pokedex = Object.create(null);
 indexMap = Object.create(null);
 
@@ -403,7 +411,7 @@ for (var i = 0, len = lines.length; i < len; i++) {
 }
 
 try {
-	fs.writeFileSync('./pokedex.js.out', 'exports.BattlePokedex = ' + JSON.stringify(Pokedex, null, '\t').replace(/[\r\n]/g, '\r\n') + ';\r\n');
+	fs.writeFileSync('./pokedex.js.out', toShowdownStyle('exports.BattlePokedex = ' + JSON.stringify(Pokedex, null, '\t') + ';\r\n'));
 } catch (err) {
 	console.log("Error while trying to write output to file: 'pokedex.js.out'.");
 	process.exit(-1);
