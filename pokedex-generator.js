@@ -34,6 +34,7 @@ function buildDexEntry (line) {
 	var entry = Object.create(null);
 	entry.inherit = true;
 	for (var key in indexMap) {
+		if (key === 'species') continue;
 		entry[validProperties[key].name] = validProperties[key].validate(line[indexMap[key]]);
 	}
 	return entry;
