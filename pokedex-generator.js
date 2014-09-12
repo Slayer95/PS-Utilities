@@ -14,18 +14,25 @@ function string (str) {
 	return '';
 }
 
-function toId (text) {
-	if (text && text.id) text = text.id;
-	else if (text && text.userid) text = text.userid;
-
-	return string(text).toLowerCase().trim().replace(/[^a-z0-9\ ]+/g, '');
-}
-
 function capitalizeFirst (text) {
 	if (!text.length) return '';
 	return text.split(' ').map(function (word) {
 		return word[0].toUpperCase() + word.slice(1);
 	}).join(' ');
+}
+
+function toName (text) {
+	if (text && text.id) text = text.id;
+	else if (text && text.userid) text = text.userid;
+
+	return capitalizeFirst(string(text).toLowerCase().trim().replace(/[^a-z0-9\ \-\']+/g, ''));
+}
+
+function toId (text) {
+	if (text && text.id) text = text.id;
+	else if (text && text.userid) text = text.userid;
+
+	return string(text).toLowerCase().trim().replace(/[^a-z0-9]+/g, '');
 }
 
 function splitComma (text) {
@@ -37,6 +44,7 @@ function buildDexEntry (line) {
 	entry.inherit = true;
 	for (var key in indexMap) {
 		if (key === 'species') continue;
+		if (!line[indexMap[key]]) continue;
 		entry[validProperties[key].name] = validProperties[key].validate(line[indexMap[key]]);
 	}
 	return entry;
@@ -60,19 +68,35 @@ indexMap = Object.create(null);
 validProperties = {
 	'num': {
 		name: 'num',
-		validate: function (val) {return Number(val)},
+		validate: function (val) {return Number(val)}
 	},
 	'species': {
 		name: 'species',
-		validate: function (val) {return capitalizeFirst(toId(parseAlias(val)))},
+		validate: function (val) {return toName(parseAlias(val))}
+	},
+	'basespecies': {
+		name: 'baseSpecies',
+		validate: function (val) {return toName(parseAlias(val))}
+	},
+	'forme': {
+		name: 'forme',
+		validate: function (val) {return val}
+	},
+	'formeletter': {
+		name: 'formeLetter',
+		validate: function (val) {return val}
 	},
 	'types': {
 		name: 'types',
-		validate: function (val) {return val.split('/').map(toId).map(capitalizeFirst)},
+		validate: function (val) {return val.split('/').map(toName)}
+	},
+	'gender': {
+		name: 'gender',
+		validate: function (val) {return toName(val)}
 	},
 	'genderratio': {
 		name: 'genderRatio',
-		validate: function (val) {return Number(val)},
+		validate: function (val) {return Number(val)}
 	},
 	'basestats': {
 		name: 'baseStats',
@@ -91,10 +115,10 @@ validProperties = {
 	'abilities': {
 		name: 'abilities',
 		validate: function (val) {
-			var abilities = val.split('/').map(toId);
-			var output = {'0': capitalizeFirst(abilities[0])};
-			if (abilities[1]) output['1'] = capitalizeFirst(abilities[1]);
-			if (abilities[2]) output['H'] = capitalizeFirst(abilities[2]);
+			var abilities = val.split('/').map(toName);
+			var output = {'0': abilities[0]};
+			if (abilities[1]) output['1'] = abilities[1];
+			if (abilities[2]) output['H'] = abilities[2];
 			return output;
 		}
 	},
@@ -120,11 +144,11 @@ validProperties = {
 	},
 	'egggroups': {
 		name: 'eggGroups',
-		validate: function (val) {return val.split(',').map(toId).map(capitalizeFirst)}
+		validate: function (val) {return val.split(',').map(toName)}
 	},
 	'otherformes': {
 		name: 'otherFormes',
-		validate: function (val) {return val.split(',').map(toId).map(capitalizeFirst)}
+		validate: function (val) {return val.split(',').map(toId)}
 	}
 };
 
