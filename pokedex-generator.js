@@ -93,15 +93,15 @@ validProperties = {
 	},
 	'species': {
 		name: 'species',
-		validate: function (val) {return toName(parseAlias(val))}
+		validate: function (val) {return toName(parseAlias(val)).replace(/\s/g, '-')}
 	},
 	'basespecies': {
 		name: 'baseSpecies',
-		validate: function (val) {return toName(parseAlias(val))}
+		validate: function (val) {return capitalizeAll(toId(parseAlias(val)))}
 	},
 	'forme': {
 		name: 'forme',
-		validate: function (val) {return toName(val)}
+		validate: function (val) {return toName(val).replace(/\s/g, '-')}
 	},
 	'formeletter': {
 		name: 'formeLetter',
@@ -109,7 +109,7 @@ validProperties = {
 	},
 	'types': {
 		name: 'types',
-		validate: function (val) {return val.split('/').map(toName)}
+		validate: function (val) {return val.split('/').map(toId).map(capitalizeAll)}
 	},
 	'gender': {
 		name: 'gender',
@@ -130,19 +130,19 @@ validProperties = {
 		validate: function (val) {
 			var stats = val.split('/');
 			return {
-				'hp': Number(stats[0]),
-				'atk': Number(stats[1]),
-				'def': Number(stats[2]),
-				'spa': Number(stats[3]),
-				'spd': Number(stats[4]),
-				'spe': Number(stats[5])
+				'hp': parseInt(stats[0], 10),
+				'atk': parseInt(stats[1], 10),
+				'def': parseInt(stats[2], 10),
+				'spa': parseInt(stats[3], 10),
+				'spd': parseInt(stats[4], 10),
+				'spe': parseInt(stats[5], 10)
 			};
 		}
 	},
 	'abilities': {
 		name: 'abilities',
 		validate: function (val) {
-			var abilities = val.split('/').map(toName);
+			var abilities = val.replace(/\-/g, '\s').split('/').map(toName);
 			var output = {'0': abilities[0]};
 			if (abilities[1]) output['1'] = abilities[1];
 			if (abilities[2]) output['H'] = abilities[2];
@@ -167,7 +167,7 @@ validProperties = {
 	},
 	'evolevel': {
 		name: 'evoLevel',
-		validate: function (val) {return Number(val)}
+		validate: function (val) {return parseInt(val, 10)}
 	},
 	'egggroups': {
 		name: 'eggGroups',
