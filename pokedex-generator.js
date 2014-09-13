@@ -307,43 +307,6 @@ Aliases = {
 	"pumpkabooaverage": "Pumpkaboo",
 	"gourgeistaverage": "Gourgeist",
 
-	// cosmetic formes
-	"gastrodone": "Gastrodon",
-	"gastrodoneast": "Gastrodon",
-	"gastrodonw": "Gastrodon",
-	"gastrodonwest": "Gastrodon",
-
-	// items
-	"band": "Choice Band",
-	"cb": "Choice Band",
-	"chesto": "Chesto Berry",
-	"chople": "Chople Berry",
-	"custap": "Custap Berry",
-	"fightgem": "Fighting Gem",
-	"flightgem": "Flying Gem",
-	"lefties": "Leftovers",
-	"lo": "Life Orb",
-	"lum": "Lum Berry",
-	"occa": "Occa Berry",
-	"salac": "Salac Berry",
-	"scarf": "Choice Scarf",
-	"specs": "Choice Specs",
-	"yache": "Yache Berry",
-	"av": "Assault Vest",
-	"assvest": "Assault Vest",
-
-	// gen 1-2 berries
-	"berry": "Oran Berry",
-	"bitterberry": "Persim Berry",
-	"burntberry": "Rawst Berry",
-	"goldberry": "Sitrus Berry",
-	"iceberry": "Aspear Berry",
-	"mintberry": "Chesto Berry",
-	"miracleberry": "Lum Berry",
-	"mysteryberry": "Leppa Berry",
-	"przcureberry": "Cheri Berry",
-	"psncureberry": "Pecha Berry",
-
 	// pokemon
 	"aboma": "Abomasnow",
 	"chomp": "Garchomp",
@@ -374,35 +337,6 @@ Aliases = {
 	"ttar": "Tyranitar",
 	"zam": "Alakazam",
 
-	// moves
-	"bpass": "Baton Pass",
-	"cc": "Close Combat",
-	"cm": "Calm Mind",
-	"dd": "Dragon Dance",
-	"eq": "Earthquake",
-	"espeed": "ExtremeSpeed",
-	"faintattack": "Feint Attack",
-	"hjk": "High Jump Kick",
-	"hijumpkick": "High Jump Kick",
-	"np": "Nasty Plot",
-	"pup": "Power-up Punch",
-	"qd": "Quiver Dance",
-	"rocks": "Stealth Rock",
-	"sd": "Swords Dance",
-	"se": "Stone Edge",
-	"spin": "Rapid Spin",
-	"sr": "Stealth Rock",
-	"sub": "Substitute",
-	"tr": "Trick Room",
-	"troom": "Trick Room",
-	"tbolt": "Thunderbolt",
-	"tspikes": "Toxic Spikes",
-	"twave": "Thunder Wave",
-	"web": "Sticky Web",
-	"wow": "Will-O-Wisp",
-	"playaround": "Play Rough",
-	"glowpunch": "Power-up Punch",
-
 	// Japanese names
 	"birijion": "Virizion",
 	"terakion": "Terrakion",
@@ -425,8 +359,6 @@ Aliases = {
 	"barujiina": "Mandibuzz",
 	"rankurusu": "Reuniclus",
 	"borutorosu": "Thundurus"
-	// there's no need to type out the other Japanese names
-	// I'll autogenerate them at some point
 };
 
 argv = process.argv.slice(2).filter(function (option) {
