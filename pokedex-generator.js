@@ -96,7 +96,13 @@ validProperties = {
 	},
 	'genderratio': {
 		name: 'genderRatio',
-		validate: function (val) {return Number(val)}
+		validate: function (val) {
+			var ratio = val.split('/');
+			return {
+				'M': Number(ratio[0]),
+				'F': Number(ratio[1])
+			};
+		}
 	},
 	'basestats': {
 		name: 'baseStats',
