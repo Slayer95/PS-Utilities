@@ -78,13 +78,40 @@ function toShowdownStyle (text) {
 	return text;
 }
 
+/**
+ *
+ * Modified function to parse a CSV string
+ *
+ * Original function by ridgerunner
+ * http://stackoverflow.com/questions/8493195/how-can-i-parse-a-csv-string-with-javascript
+ *
+ */
+
+function CSVtoArray(text) {
+	var re_valid = /^\s*(?:"[^"\\]*(?:\\[\S\s][^"\\]*)*"|[^,"\s\\]*(?:\s+[^,"\s\\]+)*)\s*(?:,\s*(?:"[^"\\]*(?:\\[\S\s][^"\\]*)*"|[^,"\s\\]*(?:\s+[^,"\s\\]+)*)\s*)*$/;
+	var re_value = /(?!\s*$)\s*(?:"([^"\\]*(?:\\[\S\s][^"\\]*)*)"|([^,"\s\\]*(?:\s+[^,"\s\\]+)*))\s*(?:,|$)/g;
+	// Return NULL if input string is not well formed CSV string.
+	if (!re_valid.test(text)) return null;
+	var a = [];                     // Initialize array to receive values.
+	text.replace(re_value, // "Walk" the string using replace with callback.
+		function (m0, m1, m2) {
+			// Remove backslash from \" in double quoted values.
+			if (m1 !== undefined) a.push(m1.replace(/\\"/g, '"'));
+			else if (m2 !== undefined) a.push(m2);
+			return ''; // Return empty string.
+		});
+	// Handle special case of empty last value.
+	if (/,\s*$/.test(text)) a.push('');
+	return a;
+}
+
 Pokedex = Object.create(null);
 indexMap = Object.create(null);
 
 validProperties = {
 	'num': {
 		name: 'num',
-		validate: function (val) {return Number(val)}
+		validate: function (val) {return parseInt(val)}
 	},
 	'species': {
 		name: 'species',
@@ -113,7 +140,7 @@ validProperties = {
 	'genderratio': {
 		name: 'genderRatio',
 		validate: function (val) {
-			var ratio = val.split('/');
+			var ratio = val.replace(/\,/g, '.').split('/');
 			return {
 				'M': Number(ratio[0]),
 				'F': Number(ratio[1])
@@ -146,11 +173,11 @@ validProperties = {
 	},
 	'heightm': {
 		name: 'heightm',
-		validate: function (val) {return Number(val)}
+		validate: function (val) {return Number(val.replace(/\,/g, '.'))}
 	},
 	'weightkg': {
 		name: 'weightkg',
-		validate: function (val) {return Number(val)}
+		validate: function (val) {return Number(val.replace(/\,/g, '.'))}
 	},
 	'color': {
 		name: 'color',
@@ -377,7 +404,7 @@ try {
 	process.exit(-1);
 }
 
-lines = contents.split(/[\r\n]/).filter(function (line) {return line}).map(function (line) {return line.split(',')});
+lines = contents.split(/[\r\n]/).filter(function (line) {return line}).map(CSVtoArray);
 lines.shift().map(toId).forEach(function (value, index) {
 	if (!validProperties.hasOwnProperty(value)) {
 		console.log("" + colorRed + "Warn   " + colorCyan + "'" + colorMagenta + value + colorCyan + "'" + " header is invalid.\nUse one of the following:\n" + colorMagenta + Object.keys(validProperties).join(colorCyan + ", " + colorMagenta) + colorCyan + "." + colorEnd);
