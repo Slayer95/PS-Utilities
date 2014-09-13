@@ -389,6 +389,10 @@ lines.shift().map(toId).forEach(function (value, index) {
 		console.log("" + colorRed + "Warn   " + colorCyan + "'" + colorMagenta + value + colorCyan + "'" + " header is invalid.\nUse one of the following:\n" + colorMagenta + Object.keys(validProperties).join(colorCyan + ", " + colorMagenta) + colorCyan + "." + colorEnd);
 		return;
 	}
+	if (value in indexMap) {
+		console.log("" + colorRed + "Error  " + colorCyan + "More than one column had the header '" + colorMagenta + value + colorCyan + "'." + colorEnd);
+		process.exit(1);
+	}
 	indexMap[value] = index;
 });
 
