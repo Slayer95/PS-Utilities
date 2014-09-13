@@ -113,7 +113,7 @@ validProperties = {
 	},
 	'gender': {
 		name: 'gender',
-		validate: function (val) {return toName(val)}
+		validate: function (val) {return val.trim().charAt(0).toUpperCase()}
 	},
 	'genderratio': {
 		name: 'genderRatio',
