@@ -1,12 +1,24 @@
 /**
- * Processes a CSV file named 'pokedex.csv' containing the differences
- * introduced by a Pokémon-Showdown mod and converts it to a PS-readable JavaScript file.
+ * Pokédex Generator
+ * 
+ * Processes a CSV file containing the differences introduced by a Pokémon Showdown mod,
+ * and converts it to a PS-readable JavaScript Pokédex file.
  *
- * It may accept an alternative path, if specified as a parameter when ran using Node.js
- *
+ * How to use:
+ * node pokedex-generator.js
+ * 
+ * It accepts some arguments, in the form:
+ * node pokedex-generator.js <input filename> <output filename> <--option>
+ * 
+ * Currently, the only supported options is "new", which removes the "inherit" flag from dex entries.
+ * 
+ * Examples:
+ * 	node pokedex-generator.js --new
+ *	node pokedex-generator.js mydatabase.csv pokedex.js
+ *	node pokedex-generator.js mydatabase.csv pokedex.js --new
  */
 
-var Pokedex, Aliases, filename, contents, lines, indexMap, speciesIndex, line, validProperties;
+var Pokedex, Aliases, argv, inputFileName, outputFileName, isNewEntries, contents, lines, indexMap, speciesIndex, line, validProperties;
 var fs = require('fs');
 
 function string (str) {
@@ -41,9 +53,9 @@ function splitComma (text) {
 
 function buildDexEntry (line) {
 	var entry = Object.create(null);
-	entry.inherit = true;
+	if (!isNewEntries) entry.inherit = true;
 	for (var key in indexMap) {
-		if (key === 'species') continue;
+		if (key === 'species' && !isNewEntries) continue;
 		if (!line[indexMap[key]]) continue;
 		entry[validProperties[key].name] = validProperties[key].validate(line[indexMap[key]]);
 	}
@@ -412,11 +424,20 @@ Aliases = {
 	// I'll autogenerate them at some point
 };
 
-filename = process.argv[2] || 'pokedex.csv';
+argv = process.argv.slice(2).filter(function (option) {
+	if (option[0] === '-' && option[1] === '-') {
+		if (toId(option.slice(2) === 'new')) isNewEntries = true;
+		return false;
+	}
+	return true;
+});
+inputFileName = argv[0] || 'pokedex.csv';
+outputFileName = argv[1] || 'pokedex.js.out';
+
 try {
-	contents = ''+fs.readFileSync(filename);
+	contents = ''+fs.readFileSync(inputFileName);
 } catch (err) {
-	console.log("Error: File '" + filename + "' was not found or could not be read.");
+	console.log("Error: File '" + inputFileName + "' was not found or could not be read.");
 	process.exit(-1);
 }
 lines = contents.split(/[\r\n]/).filter(function (line) {return line}).map(splitComma);
@@ -431,7 +452,7 @@ lines.shift().map(toId).forEach(function (value, index) {
 speciesIndex = indexMap['species'];
 
 if (typeof speciesIndex === 'undefined') {
-	console.log("Error: 'Species' header not found in file: '" + filename + "'.");
+	console.log("Error: 'Species' header not found in file: '" + inputFileName + "'.");
 	process.exit(-1);
 }
 
@@ -441,10 +462,10 @@ for (var i = 0, len = lines.length; i < len; i++) {
 }
 
 try {
-	fs.writeFileSync('./pokedex.js.out', toShowdownStyle('exports.BattlePokedex = ' + JSON.stringify(Pokedex, null, '\t') + ';\r\n'));
+	fs.writeFileSync('./' + outputFileName , toShowdownStyle('exports.BattlePokedex = ' + JSON.stringify(Pokedex, null, '\t') + ';\r\n'));
 } catch (err) {
-	console.log("Error while trying to write output to file: 'pokedex.js.out'.");
+	console.log("Error while trying to write output to file: '" + outputFileName + "'.");
 	process.exit(-1);
 }
 
-console.log("File 'pokedex.js.out' successfully written.");
+console.log("File '" + outputFileName + "' successfully written.");
