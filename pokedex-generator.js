@@ -117,7 +117,7 @@ indexMap = Object.create(null);
 validProperties = {
 	'num': {
 		name: 'num',
-		validate: function (val) {return parseInt(val)}
+		validate: function (val) {return parseInt(val, 10)}
 	},
 	'species': {
 		name: 'species',
