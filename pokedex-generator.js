@@ -90,7 +90,7 @@ function toShowdownStyle (text) {
 function CSVtoArray(text, index) {
 	var re_valid = /^\s*(?:"[^"\\]*(?:\\[\S\s][^"\\]*)*"|[^,"\s\\]*(?:\s+[^,"\s\\]+)*)\s*(?:,\s*(?:"[^"\\]*(?:\\[\S\s][^"\\]*)*"|[^,"\s\\]*(?:\s+[^,"\s\\]+)*)\s*)*$/;
 	var re_value = /(?!\s*$)\s*(?:"([^"\\]*(?:\\[\S\s][^"\\]*)*)"|([^,"\s\\]*(?:\s+[^,"\s\\]+)*))\s*(?:,|$)/g;
-	// Return NULL if input string is not well formed CSV string.
+
 	if (!re_valid.test(text)) {
 		console.log(
 			"" + colorRed + "Error  " + colorCyan + "File '" + colorMagenta + inputFileName + colorCyan + "' does not contain valid CSV data:\n" +
@@ -98,7 +98,7 @@ function CSVtoArray(text, index) {
 		);
 		process.exit(1);
 	}
-	var a = [];                     // Initialize array to receive values.
+	var a = []; // Initialize array to receive values.
 	text.replace(re_value, // "Walk" the string using replace with callback.
 		function (m0, m1, m2) {
 			// Remove backslash from \" in double quoted values.
