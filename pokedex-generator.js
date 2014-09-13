@@ -87,11 +87,17 @@ function toShowdownStyle (text) {
  *
  */
 
-function CSVtoArray(text) {
+function CSVtoArray(text, index) {
 	var re_valid = /^\s*(?:"[^"\\]*(?:\\[\S\s][^"\\]*)*"|[^,"\s\\]*(?:\s+[^,"\s\\]+)*)\s*(?:,\s*(?:"[^"\\]*(?:\\[\S\s][^"\\]*)*"|[^,"\s\\]*(?:\s+[^,"\s\\]+)*)\s*)*$/;
 	var re_value = /(?!\s*$)\s*(?:"([^"\\]*(?:\\[\S\s][^"\\]*)*)"|([^,"\s\\]*(?:\s+[^,"\s\\]+)*))\s*(?:,|$)/g;
 	// Return NULL if input string is not well formed CSV string.
-	if (!re_valid.test(text)) return null;
+	if (!re_valid.test(text)) {
+		console.log(
+			"" + colorRed + "Error  " + colorCyan + "File '" + colorMagenta + inputFileName + colorCyan + "' does not contain valid CSV data:\n" +
+			colorRed + "L" + (index + 1) + "  " + colorMagenta + text + colorEnd
+		);
+		process.exit(1);
+	}
 	var a = [];                     // Initialize array to receive values.
 	text.replace(re_value, // "Walk" the string using replace with callback.
 		function (m0, m1, m2) {
@@ -407,11 +413,14 @@ try {
 lines = contents.split(/[\r\n]/).filter(function (line) {return line}).map(CSVtoArray);
 lines.shift().map(toId).forEach(function (value, index) {
 	if (!validProperties.hasOwnProperty(value)) {
-		console.log("" + colorRed + "Warn   " + colorCyan + "'" + colorMagenta + value + colorCyan + "'" + " header is invalid.\nUse one of the following:\n" + colorMagenta + Object.keys(validProperties).join(colorCyan + ", " + colorMagenta) + colorCyan + "." + colorEnd);
+		console.log(
+			"" + colorRed + "Warn   " + colorCyan + "'" + colorMagenta + value + colorCyan + "'" + " header is invalid.\n" +
+			"Use one of the following:\n" + colorMagenta + Object.keys(validProperties).join(colorCyan + ", " + colorMagenta) + colorCyan + "." + colorEnd
+		);
 		return;
 	}
 	if (value in indexMap) {
-		console.log("" + colorRed + "Error  " + colorCyan + "More than one column had the header '" + colorMagenta + value + colorCyan + "'." + colorEnd);
+		console.log("" + colorRed + "Error  " + colorCyan + "More than one column has the header '" + colorMagenta + value + colorCyan + "'." + colorEnd);
 		process.exit(1);
 	}
 	indexMap[value] = index;
