@@ -361,7 +361,7 @@ Aliases = {
 
 argv = process.argv.slice(2).filter(function (option) {
 	if (option[0] === '-' && option[1] === '-') {
-		if (toId(option.slice(2) === 'new')) isNewEntries = true;
+		if (toId(option.slice(2)) === 'new') isNewEntries = true;
 		return false;
 	}
 	return true;
