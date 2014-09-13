@@ -38,8 +38,7 @@ function string (str) {
 var capitalizeAll = (function () {
 	var re = /([\ \-]+)(.)/g;
 	var capitalize = function (word) {
-		if (!word.length) return '';
-		return word[0].toUpperCase() + word.slice(1);
+		return word.charAt(0).toUpperCase() + word.slice(1);
 	};
 	var capitalize$2 = function (match, p1, p2) {
 		return p1 + p2.toUpperCase();
@@ -102,11 +101,11 @@ validProperties = {
 	},
 	'forme': {
 		name: 'forme',
-		validate: function (val) {return val}
+		validate: function (val) {return toName(val)}
 	},
 	'formeletter': {
 		name: 'formeLetter',
-		validate: function (val) {return val}
+		validate: function (val) {return val.trim().charAt(0).toUpperCase()}
 	},
 	'types': {
 		name: 'types',
@@ -160,11 +159,11 @@ validProperties = {
 	},
 	'color': {
 		name: 'color',
-		validate: function (val) {return val}
+		validate: function (val) {return toId(val)}
 	},
 	'prevo': {
 		name: 'prevo',
-		validate: function (val) {return val}
+		validate: function (val) {return toId(val)}
 	},
 	'evolevel': {
 		name: 'evoLevel',
