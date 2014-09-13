@@ -25,28 +25,27 @@
 
 var Pokedex, Aliases, argv, inputFileName, outputFileName, isNewEntries, contents, lines, indexMap, speciesIndex, line, validProperties;
 var fs = require('fs');
+var colorCyan = '\x1B[36m';
+var colorRed = '\x1B[31m';
+var colorMagenta = '\x1B[35m';
+var colorEnd = '\x1B[39m';
 
 function string (str) {
 	if (typeof str === 'string' || typeof str === 'number') return '' + str;
 	return '';
 }
 
-function capitalize (word) {
-	if (!word.length) return '';
-	return word[0].toUpperCase() + word.slice(1);
-}
-
-function splitComma (text) {
-	return text.split(',');
-}
-
 var capitalizeAll = (function () {
 	var re = /([\ \-]+)(.)/g;
-	var capitalizeSecond = function (match, p1, p2) {
+	var capitalize = function (word) {
+		if (!word.length) return '';
+		return word[0].toUpperCase() + word.slice(1);
+	};
+	var capitalize$2 = function (match, p1, p2) {
 		return p1 + p2.toUpperCase();
 	};
 	return function (text) {
-		return capitalize(text).replace(re, capitalizeSecond);
+		return capitalize(text).replace(re, capitalize$2);
 	};
 })();
 
@@ -378,15 +377,16 @@ inputFileName = argv[0] || 'pokedex.csv';
 outputFileName = argv[1] || 'pokedex.js.out';
 
 try {
-	contents = ''+fs.readFileSync(inputFileName);
+	contents = '' + fs.readFileSync(inputFileName);
 } catch (err) {
-	console.log("Error: File '" + inputFileName + "' was not found or could not be read.");
+	console.log("" + colorRed + "Error  " + colorCyan + "File " + colorMagenta + "'" + inputFileName + colorCyan + "' was not found or could not be read." + colorEnd);
 	process.exit(-1);
 }
-lines = contents.split(/[\r\n]/).filter(function (line) {return line}).map(splitComma);
+
+lines = contents.split(/[\r\n]/).filter(function (line) {return line}).map(function (line) {return line.split(',')});
 lines.shift().map(toId).forEach(function (value, index) {
 	if (!validProperties.hasOwnProperty(value)) {
-		console.log("Header '" + value + "' is invalid. Use one of the following: " + Object.keys(validProperties).join(', '));
+		console.log("" + colorRed + "Warn   " + colorCyan + "'" + colorMagenta + value + colorCyan + "'" + " header is invalid.\nUse one of the following:\n" + colorMagenta + Object.keys(validProperties).join(colorCyan + ", " + colorMagenta) + colorCyan + "." + colorEnd);
 		return;
 	}
 	indexMap[value] = index;
@@ -395,8 +395,8 @@ lines.shift().map(toId).forEach(function (value, index) {
 speciesIndex = indexMap['species'];
 
 if (typeof speciesIndex === 'undefined') {
-	console.log("Error: 'Species' header not found in file: '" + inputFileName + "'.");
-	process.exit(-1);
+	console.log("" + colorRed + "Error  " + colorCyan + "'" + colorMagenta + "Species" + colorCyan + "' header not found in file: '" + colorMagenta + inputFileName + colorCyan + "'." + colorEnd);
+	process.exit(1);
 }
 
 for (var i = 0, len = lines.length; i < len; i++) {
@@ -407,8 +407,8 @@ for (var i = 0, len = lines.length; i < len; i++) {
 try {
 	fs.writeFileSync('./' + outputFileName , toShowdownStyle('exports.BattlePokedex = ' + JSON.stringify(Pokedex, null, '\t') + ';\r\n'));
 } catch (err) {
-	console.log("Error while trying to write output to file: '" + outputFileName + "'.");
-	process.exit(-1);
+	console.log("" + colorRed + "Error " + colorCyan + " It was not possible to write output to file: '" + colorMagenta + outputFileName + colorCyan + "'." + colorEnd);
+	process.exit(1);
 }
 
-console.log("File '" + outputFileName + "' successfully written.");
+console.log("" + colorCyan + "File '" + colorMagenta + outputFileName + colorCyan + "' successfully written." + colorEnd);
