@@ -16,6 +16,11 @@
  * 	node pokedex-generator.js --new
  *	node pokedex-generator.js mydatabase.csv pokedex.js
  *	node pokedex-generator.js mydatabase.csv pokedex.js --new
+ * 
+ * The default filenames are:
+ * 	input: pokedex.csv
+ * 	output: pokedex.js.out
+ * 
  */
 
 var Pokedex, Aliases, argv, inputFileName, outputFileName, isNewEntries, contents, lines, indexMap, speciesIndex, line, validProperties;
