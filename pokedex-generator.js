@@ -49,7 +49,7 @@ function toId (text) {
 	if (text && text.id) text = text.id;
 	else if (text && text.userid) text = text.userid;
 
-	return string(text).toLowerCase().trim().replace(/[^a-z0-9]+/g, '');
+	return string(text).toLowerCase().replace(/[^a-z0-9]+/g, '');
 }
 
 function splitComma (text) {
