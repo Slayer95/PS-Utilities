@@ -30,11 +30,6 @@ var colorRed = '\x1B[31m';
 var colorMagenta = '\x1B[35m';
 var colorEnd = '\x1B[39m';
 
-function string (str) {
-	if (typeof str === 'string' || typeof str === 'number') return '' + str;
-	return '';
-}
-
 var capitalizeAll = (function () {
 	var re = /([\ \-]+)(.)/g;
 	var capitalize = function (word) {
@@ -50,14 +45,14 @@ var capitalizeAll = (function () {
 
 function toName (text) {
 	if (text && text.id) text = text.id;
-
-	return capitalizeAll(string(text).toLowerCase().trim().replace(/[^a-z0-9\ \-\']+/g, ''));
+	if (typeof text !== 'string' && typeof text !== 'number') return '';
+	return capitalizeAll(('' + text).toLowerCase().trim().replace(/[^a-z0-9\ \-\']+/g, ''));
 }
 
 function toId (text) {
 	if (text && text.id) text = text.id;
-
-	return string(text).toLowerCase().replace(/[^a-z0-9]+/g, '');
+	if (typeof text !== 'string' && typeof text !== 'number') return '';
+	return ('' + text).toLowerCase().replace(/[^a-z0-9]+/g, '');
 }
 
 function buildDexEntry (line) {
@@ -97,7 +92,7 @@ validProperties = {
 	},
 	'basespecies': {
 		name: 'baseSpecies',
-		validate: function (val) {return capitalizeAll(toId(parseAlias(val)))}
+		validate: function (val) {return toName(parseAlias(val).replace(/[\s\-]/g, ''))}
 	},
 	'forme': {
 		name: 'forme',
