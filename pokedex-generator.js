@@ -31,27 +31,35 @@ function string (str) {
 	return '';
 }
 
-function capitalizeFirst (text) {
-	if (!text.length) return '';
-	return text.split(' ').map(function (word) {
-		return word[0].toUpperCase() + word.slice(1);
-	}).join(' ');
+function capitalize (word) {
+	if (!word.length) return '';
+	return word[0].toUpperCase() + word.slice(1);
 }
+
+function splitComma (text) {
+	return text.split(',');
+}
+
+var capitalizeAll = (function () {
+	var re = /([\ \-]+)(.)/g;
+	var capitalizeSecond = function (match, p1, p2) {
+		return p1 + p2.toUpperCase();
+	};
+	return function (text) {
+		return capitalize(text).replace(re, capitalizeSecond);
+	};
+})();
 
 function toName (text) {
 	if (text && text.id) text = text.id;
 
-	return capitalizeFirst(string(text).toLowerCase().trim().replace(/[^a-z0-9\ \-\']+/g, ''));
+	return capitalizeAll(string(text).toLowerCase().trim().replace(/[^a-z0-9\ \-\']+/g, ''));
 }
 
 function toId (text) {
 	if (text && text.id) text = text.id;
 
 	return string(text).toLowerCase().replace(/[^a-z0-9]+/g, '');
-}
-
-function splitComma (text) {
-	return text.split(',');
 }
 
 function buildDexEntry (line) {
